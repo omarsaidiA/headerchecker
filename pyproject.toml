@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling>=1.33"]
+build-backend = "hatchling.build"
+
+[project]
+name = "headercheck"
+dynamic = ["version"]
+description = "Audit the HTTP security headers, cookies and CORS policy of a web application or API"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Omar Saidi" }]
+keywords = ["security", "http", "headers", "csp", "cors", "devsecops", "sarif"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+# No runtime dependencies on purpose: the standard library is enough, and every dependency
+# is extra supply-chain risk for a tool meant to run inside CI pipelines.
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.2.0",
+    "pytest-cov==7.1.0",
+    "ruff==0.17.4",
+    "mypy==2.4.1",
+]
+
+[project.scripts]
+headercheck = "headercheck.cli:main"
+
+[project.urls]
+Source = "https://github.com/omarsaidiA/headerchecker"
+
+[tool.hatch.version]
+path = "src/headercheck/__init__.py"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# S = flake8-bandit (security), B = bugbear, UP = pyupgrade, SIM = simplify, RUF = ruff-specific
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# assert is the normal way to write pytest tests
+"tests/**" = ["S101"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=headercheck --cov-report=term-missing --cov-fail-under=90"

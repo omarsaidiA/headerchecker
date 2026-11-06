@@ -1,0 +1,21 @@
+version: 2
+
+# Cooldown: wait a week before proposing a fresh release, so a compromised version is more
+# likely to be detected and pulled first. No auto-merge: every update is reviewed.
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      dev-tools:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
